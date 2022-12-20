@@ -97,8 +97,10 @@ class Parser_gosuslugi(Parser):
         input_text.send_keys(text_petition)
         self.click_button(text_button='Продолжить')
         self.load_file(text_xpath_input='//epgu-constructor-uploader-button/button/../input', path_file=path_file)
+        print("Подано")
         # self.click_button(text_button='Отправить заявление')
-        self.click_button(text_button='На главную')
+        # self.click_button(text_button='На главную')
+        self.open_new_page('https://www.gosuslugi.ru/legal-entity')
         number_petition = self.get_number_petition()
         date_petition = datetime.date.today()
         logging.info(f'Подано ходатайство № {number_petition}')
@@ -114,7 +116,10 @@ class Parser_gosuslugi(Parser):
         except NoSuchElementException:
             logging.error(f'Ошибка парсинга!!! Не найден элемент c номером заявления')
             raise NoSuchElementException()
-        number_petition = number_petition[1:]
+        try:
+            number_petition = int(number_petition[1:])
+        except ValueError:
+            number_petition = number_petition[1:]
         return number_petition
 
     def open_page_new_petition(self):
@@ -124,6 +129,7 @@ class Parser_gosuslugi(Parser):
             text_xpath = f'//span[contains(text(), "Заявление зарегистрировано")]/parent::span/parent::div/parent::a'
             elm = self.driver.find_elements(By.XPATH, text_xpath)
             elm[0].click()
+            logging.info('Перехожу в карточку последнего обращения')
         except NoSuchElementException:
             logging.error(f'Ошибка парсинга!!! Не найден элемент нового заявления')
             raise NoSuchElementException()

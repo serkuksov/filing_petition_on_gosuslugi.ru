@@ -39,9 +39,9 @@ def get_not_filed_petitions() -> list[dict]:
             not_filed_petitions.append(petition)
         i += 1
     if not_filed_petitions:
-        logging.info(f'Получен список ходатайств требующих подачи')
+        logging.info(f'Получен список обращений требующих подачи {len(not_filed_petitions)} шт.')
     else:
-        logging.info(f'Ходатайств требующих подачи нет')
+        logging.info(f'Обращений требующих подачи нет')
     return not_filed_petitions
 
 
@@ -57,7 +57,7 @@ def save_filed_petition_in_excel(filed_petition: dict):
     row = filed_petition['number_rom']
     list_excel.cell(row=row, column=3).value = filed_petition['Дата отправки']
     list_excel.cell(row=row, column=4).value = filed_petition['Номер заявления']
-    logging.info(f'Информация о подаче ходатайства № {filed_petition["Номер заявления"]} записана в Excel')
+    logging.info(f'Информация о подаче обращения № {filed_petition["Номер заявления"]} записана в Excel')
     book.save(path_exel)
 
 
