@@ -5,6 +5,9 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
 
 
 class Parser:
@@ -66,3 +69,37 @@ class Parser:
         logging.debug(f'Открываю страницу: {url}')
         self.driver.get(url)
         time.sleep(self.timeout)
+
+    def click_elm(self, xpath_elm: str, text_elm: str):
+        try:
+            self.driver.find_element(By.XPATH, f'{xpath_elm}[contains(text(), "{text_elm}")]').click()
+        except NoSuchElementException:
+            logging.error(f'Ошибка парсинга!!! Не найден элемент {text_elm}')
+            raise NoSuchElementException()
+        logging.info(f'Нажата элемент {text_elm}')
+        time.sleep(self.timeout)
+
+    def click_button(self, text_button: str):
+        try:
+            text_xpath = f'//button//*[contains(text(), "{text_button}")] | //button[contains(text(), "{text_button}")]'
+            elm = self.driver.find_element(By.XPATH, text_xpath)
+            elm.click()
+        except NoSuchElementException:
+            logging.error(f'Ошибка парсинга!!! Не найден элемент {text_button}')
+            raise NoSuchElementException()
+        logging.info(f'Нажата кнопка {text_button}')
+        time.sleep(self.timeout)
+
+    def load_file(self, text_xpath_input: str, path_file: str):
+        try:
+            elm = self.driver.find_element(By.XPATH, text_xpath_input)
+            elm.send_keys(path_file)
+        except NoSuchElementException:
+            logging.error(f'Ошибка парсинга!!! Не найден элемент для загрузки файла')
+            raise NoSuchElementException()
+        logging.info('Выполнена загрузка файла')
+        time.sleep(self.timeout)
+
+    def scrolling_page(self):
+        self.driver.find_element(By.TAG_NAME, 'html').send_keys(Keys.END)
+        logging.info(f'Прокручиваю страницу')
