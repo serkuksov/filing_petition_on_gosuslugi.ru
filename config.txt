@@ -1,0 +1,7 @@
+{
+    "LOGIN": "+79022618413",
+    "PASSWORD": "Kod2x2=5",
+    "TIMEOUT": "7",
+    "ORGANIZATION": "1",
+    "NAME_FILE_ORDER": "Вложение Приказ № 1 о назначении дир-ра ПАТРИОТ0001.pdf"
+}
