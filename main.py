@@ -16,7 +16,8 @@ def log():
     handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
     handler.setLevel(logging.INFO)
     root_logger.addHandler(handler)
-    logging.getLogger("pymorphy2").setLevel(logging.ERROR)
+    logging.getLogger("selenium").setLevel(logging.ERROR)
+    logging.getLogger("webdriver_manager").setLevel(logging.ERROR)
 
 
 def get_config():
