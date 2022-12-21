@@ -32,7 +32,8 @@ def get_config():
         "PASSWORD",
         "TIMEOUT",
         "ORGANIZATION",
-        "NAME_FILE_ORDER"
+        "NAME_FILE_ORDER",
+        "NAME_EXEL",
     ]
     if list_config == verification_list_config:
         logging.info(f'Получены параметры конфигурации')
@@ -60,17 +61,29 @@ def filing_petitions():
     вызывает функцию подачи ходатайства, получает ответ в виде параметров с
     датой отправки и номером заявления. Сохраняет данные в эксель"""
     config = get_config()
-    not_filed_petitions = get_not_filed_petitions()
+    login = config['LOGIN']
+    password = config['PASSWORD']
+    timeout = int(config['TIMEOUT'])
+    organization = int(config['ORGANIZATION'])
+    name_file = config['NAME_FILE_ORDER']
+    name_excel = config['NAME_EXEL']
+    not_filed_petitions = get_not_filed_petitions(name_excel=name_excel)
     if not not_filed_petitions:
         exit()
-    parser = Parser_gosuslugi(login=config['LOGIN'],
-                              password=config['PASSWORD'],
-                              organization=int(config['ORGANIZATION']),
-                              timeout=int(config['TIMEOUT']))
-    name_file = config['NAME_FILE_ORDER']
+    if not_filed_petitions[0]['Номер ИП'] is None or not_filed_petitions[0]['Ходатайство'] is None:
+        logging.error('В эксель задана пустая строка. Или введены не все параметры')
+        exit()
+    parser = Parser_gosuslugi(login=login,
+                              password=password,
+                              timeout=timeout,
+                              organization=organization,
+                              )
     path_file = get_path_file(name_file=name_file)
     i = 1
     for petition in not_filed_petitions:
+        if petition['Номер ИП'] is None or petition['Ходатайство'] is None:
+            logging.error('В эксель задана пустая строка. Или введены не все параметры')
+            continue
         logging.info(f'Приступаю к подаче обращения {i}')
         params_petition = parser.register_petition(number_ip=petition['Номер ИП'],
                                                    text_petition=petition['Ходатайство'],
@@ -78,7 +91,7 @@ def filing_petitions():
         filed_petition = petition | params_petition
         logging.info(f'Подано {i} обращение из {len(not_filed_petitions)}')
         i += 1
-        save_filed_petition_in_excel(filed_petition)
+        save_filed_petition_in_excel(filed_petition=filed_petition, name_excel=name_excel)
 
 
 def main():

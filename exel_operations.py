@@ -27,10 +27,10 @@ def get_json_from_excel(path_exel: str) -> dict:
     return data
 
 
-def get_not_filed_petitions() -> list[dict]:
+def get_not_filed_petitions(name_excel: str) -> list[dict]:
     """Получить список не поданых на госуслуги ходатайств
     с добавлением параметра номер строки"""
-    petitions = get_json_from_excel('Ходатайства.xlsx')['Лист1']
+    petitions = get_json_from_excel(name_excel)['Лист1']
     not_filed_petitions = []
     i = 2
     for petition in petitions:
@@ -45,11 +45,10 @@ def get_not_filed_petitions() -> list[dict]:
     return not_filed_petitions
 
 
-def save_filed_petition_in_excel(filed_petition: dict):
+def save_filed_petition_in_excel(filed_petition: dict, name_excel: str):
     """Сохраняет информацию о ходатайстве json в Excel."""
-    path_exel = 'Ходатайства.xlsx'
     try:
-        book = load_workbook(path_exel)
+        book = load_workbook(name_excel)
     except FileNotFoundError:
         logging.error('Не удалось найти файл Excel')
         raise
@@ -58,7 +57,7 @@ def save_filed_petition_in_excel(filed_petition: dict):
     list_excel.cell(row=row, column=3).value = filed_petition['Дата отправки']
     list_excel.cell(row=row, column=4).value = filed_petition['Номер заявления']
     logging.info(f'Информация о подаче обращения № {filed_petition["Номер заявления"]} записана в Excel')
-    book.save(path_exel)
+    book.save(name_excel)
 
 
 if __name__ == '__main__':
