@@ -34,7 +34,7 @@ def get_not_filed_petitions(name_excel: str) -> list[dict]:
     not_filed_petitions = []
     i = 2
     for petition in petitions:
-        if petition['Номер заявления'] is None:
+        if petition['Номер заявления'] is None and not petition['Номер ИП'] is None and not petition['Ходатайство'] is None:
             petition['number_rom'] = i
             not_filed_petitions.append(petition)
         i += 1
