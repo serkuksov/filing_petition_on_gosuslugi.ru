@@ -47,12 +47,12 @@ def get_config():
 def get_path_file(name_file: str) -> str:
     """Проверяет наличие файла в текущей директории запуска скрипта.
     Возвращает путь к файлу."""
-    path_script = os.path.dirname(os.path.abspath(__file__))
+    path_script = os.path.abspath(os.getcwd())
     path_file = os.path.join(path_script, name_file)
     if not os.path.exists(path_file):
         logging.error(f'Не найден файл приказа с названием {name_file}')
         raise FileNotFoundError
-    logging.info(f'Получен путь к файлу приказа')
+    logging.info(f'Получен путь к файлу приказа {path_file}')
     return path_file
 
 
