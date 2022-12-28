@@ -126,7 +126,7 @@ class Parser_gosuslugi(Parser):
         """Открыть страницу последнего созданного обращения"""
         self.click_elm(xpath_elm='//a', text_elm='Все уведомления')
         try:
-            text_xpath = f'//span[contains(text(), "Заявление зарегистрировано")]/parent::span/parent::div/parent::a'
+            text_xpath = f'//span[contains(text(), "Заявление получено ведомством")]/parent::span/parent::div/parent::a'
             elm = self.driver.find_elements(By.XPATH, text_xpath)
             elm[0].click()
             logging.info('Перехожу в карточку последнего обращения')
